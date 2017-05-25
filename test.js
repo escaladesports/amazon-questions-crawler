@@ -14,7 +14,6 @@ function testHorseman(){
 	const Horseman = require('node-horseman')
 	const horseman = new Horseman()
 	const pageLink = 'https://google.com/'
-	const userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0'
 	horseman
 		.userAgent(userAgent)
 		.open(pageLink)
