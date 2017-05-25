@@ -32,7 +32,7 @@ function crawlQuestions(asin, opt, cb) {
 		}
 	}
 
-	const horseman = new Horseman()
+	const horseman = new Horseman({loadImages: false, injectJquery: false})
 	const pageLink = opt.page.replace('{{asin}}', asin)
 	horseman
 		.userAgent(random_ua.generate())
@@ -106,7 +106,7 @@ function crawlQuestionPages(content, opt, cb) {
 
 function crawlSinglePage(obj, opt) {
 	return new Promise((resolve, reject) => {
-		const horseman = new Horseman()
+		var horseman = new Horseman({loadImages: false, injectJquery: false})
 			.userAgent(random_ua.generate())
 			.open(obj.link)
 			.then(status => {
