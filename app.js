@@ -117,9 +117,9 @@ function crawlSinglePage(obj, opt) {
 			.waitForSelector(opt.elements.questionDate)
 			.evaluate(parseDetails, opt)
 			.then(data => {
-				obj.date = new Date(data.date)
-				obj.author = data.author
-				resolve()
+				obj.date = data.date;
+				obj.author = data.author;
+				resolve();
 			})
 			// .catch(reject)
 			.catch((err) => {
@@ -133,11 +133,14 @@ function parseDetails(opt) {
 	var dateQuery = document.querySelector(opt.elements.questionDate)
 	var authorQuery = document.querySelector(opt.elements.author).innerText
 
-	var date = 'Not found'
+	var date = undefined;
 	if (dateQuery) {
 		var str = dateQuery.textContent.split(' on ')
 		if (str && str[1]) {
-			date = str[1].trim()
+			date = new Date(str[1].trim());
+			if(date == 'Invalid Date') {
+				date = undefined;
+			}
 		}
 	}
 
