@@ -1,9 +1,9 @@
 'use strict'
 const questionsCrawler = require('./app.js')
 
-// https://www.amazon.com/ask/questions/asin/B003145K3E/1/ref=ask_ql_psf_ql_hza?sort=SUBMIT_DATE
+// https://www.amazon.com/ask/questions/asin/B003B809IG/1/ref=ask_ql_psf_ql_hza?sort=SUBMIT_DATE
 function testCrawler(){
-	questionsCrawler('B003145K3E', function(err, questions){
+	questionsCrawler('B003B809IG', function(err, questions){
 		if(err) throw err
 		console.log(questions)
 	})
