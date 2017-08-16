@@ -1,6 +1,5 @@
 'use strict'
-
-const Horseman = require('node-horseman')
+const Nightmare = require('nightmare')
 const random_ua = require('random-ua');
 
 const defaultOptions = {
@@ -32,22 +31,14 @@ function crawlQuestions(asin, opt, cb) {
 		}
 	}
 
-	const horseman = new Horseman({loadImages: false, injectJquery: false})
-	const pageLink = opt.page.replace('{{asin}}', asin)
-	horseman
-		.userAgent(random_ua.generate())
-		.open(pageLink)
-		.status()
-		.then(status => {
-			if (Number(status) >= 400) {
-				cb(`Page ${pageLink} failed with status: ${status}`)
-			}
-		})
-		.waitForSelector(opt.elements.questionBlock)
+	new Nightmare()
+		.useragent(opt.userAgent || random_ua.generate())
+		.goto(opt.page.replace('{{asin}}', asin))
+		.wait(opt.elements.questionBlock)
 		.evaluate(parseQuestions, opt)
+		.end()
 		.then(content => {
 			crawlQuestionPages(content, opt, cb)
-				//cb(false, content)
 		})
 		.catch(err => {
 			if (err.toString().indexOf('TimeoutError') > -1) {
@@ -60,7 +51,6 @@ function crawlQuestions(asin, opt, cb) {
 				cb(err)
 			}
 		})
-		.close()
 }
 // Find questions in browser
 function parseQuestions(opt) {
@@ -106,26 +96,20 @@ function crawlQuestionPages(content, opt, cb) {
 
 function crawlSinglePage(obj, opt) {
 	return new Promise((resolve, reject) => {
-		var horseman = new Horseman({loadImages: false, injectJquery: false})
-			.userAgent(random_ua.generate())
-			.open(obj.link)
-			.then(status => {
-				if (Number(status) >= 400) {
-					reject(`Page ${pageLink} failed with status: ${status}`)
-				}
-			})
-			.waitForSelector(opt.elements.questionDate)
+		new Nightmare()
+			.useragent(opt.userAgent || random_ua.generate())
+			.goto(obj.link)
+			.wait(opt.elements.questionDate)
 			.evaluate(parseDetails, opt)
+			.end()
 			.then(data => {
-				obj.date = data.date;
-				obj.author = data.author;
-				resolve();
+				obj.date = data.date
+				obj.author = data.author
+				resolve()
 			})
-			// .catch(reject)
 			.catch((err) => {
 				reject(err)
 			})
-			.close()
 	})
 }
 // Find date in browser

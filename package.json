@@ -4,7 +4,8 @@
   "description": "Crawls product questions from Amazon.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app",
+    "test": "node test"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,7 @@
   "author": "Kennedy Rose <krose@escaladesports.com> (https://escaladesports.com)",
   "license": "MIT",
   "dependencies": {
-    "node-horseman": "^3.2.0",
-    "phantomjs-prebuilt": "^2.1.13",
+    "nightmare": "^2.10.0",
     "random-ua": "^0.0.6"
   }
 }
