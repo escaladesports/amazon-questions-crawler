@@ -6,32 +6,41 @@ Crawls product questions from Amazon.
 
 Via [npm](https://www.npmjs.com/):
 
-```
+```bash
 npm install amazon-questions-crawler
+```
+
+Or [Yarn](https://yarnpkg.com/):
+
+```bash
+yarn add amazon-questions-crawler
 ```
 
 ## Usage
 
 ### Load the module
 
-```
+```javascript
 var questionsCrawler = require('amazon-questions-crawler')
 ```
 
 ### Get questions by a product ASIN
 
-```
-questionsCrawler('0062472100', function(err, questions){
-	if(err) throw err
-	console.log(questions)
-})
+```javascript
+questionsCrawler('0062472100')
+	.then(function(questions){
+		console.log(questions)
+	})
+	.catch(function(err){
+		console.error(err)
+	})
 ```
 
 This will return an object containing the title of the product and an array of questions data.
 
 Example of a return:
 
-```
+```javascript
 {
 	title: "Product Name",
 	questions: [
@@ -50,20 +59,22 @@ Options can also be provided to change the user agent string, questions page, or
 
 Example:
 
-```
+```javascript
 reviewsCrawler('0062472100', {
-	page: 'https://www.amazon.com/ask/questions/asin/{{asin}}/1/ref=ask_ql_psf_ql_hza?sort=SUBMIT_DATE',
-	userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0',
-	elements: {
-		// Searches whole page
-		productTitle: '.askProductDescription a',
-		questionBlock: '.askTeaserQuestions > div',
-		// Searches within questionBlock
-		question: 'a',
-		link: 'a'
-	},
-	// Stops crawling when it hits a particular question ID
-	// Useful for only crawling new questions
-	stopAtQuestionId: false
-}
+		page: 'https://www.amazon.com/ask/questions/asin/{{asin}}/1/ref=ask_ql_psf_ql_hza?sort=SUBMIT_DATE',
+		userAgent: 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:27.0) Gecko/20100101 Firefox/27.0',
+		elements: {
+			// Searches whole page
+			productTitle: '.askProductDescription a',
+			questionBlock: '.askTeaserQuestions > div',
+			// Searches within questionBlock
+			question: 'a',
+			link: 'a'
+		},
+		// Stops crawling when it hits a particular question ID
+		// Useful for only crawling new questions
+		stopAtQuestionId: false
+	})
+	.then(console.log)
+	.catch(console.error)
 ```
