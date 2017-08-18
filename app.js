@@ -4,16 +4,6 @@ const randomUa = require('random-ua')
 const evalFunctions = require('amazon-questions-crawler-eval')
 const defaultOptions = {
 	page: 'https://www.amazon.com/ask/questions/asin/{{asin}}/1/ref=ask_ql_psf_ql_hza?sort=SUBMIT_DATE',
-	elements: {
-		// Searches whole page
-		productTitle: '.askProductDescription a',
-		questionBlock: '.askTeaserQuestions > div',
-		questionDate: '.cdAuthorInfoBlock',
-		author: '.cdAuthorInfoBlock a',
-		// Searches within questionBlock
-		question: 'a',
-		link: 'a'
-	},
 	stopAtQuestionId: false
 }
 
@@ -24,7 +14,7 @@ function crawlQuestions(asin, opt) {
 		new Nightmare()
 			.useragent(opt.userAgent || randomUa.generate())
 			.goto(opt.page.replace('{{asin}}', asin))
-			.wait(opt.elements.questionBlock)
+			.wait((opt.elements && opt.elements.questionBlock) || '.askTeaserQuestions > div')
 			.evaluate(evalFunctions.allQuestions, opt)
 			.end()
 			.then(content => {
@@ -57,7 +47,7 @@ function crawlSinglePage(obj, opt) {
 		new Nightmare()
 			.useragent(opt.userAgent || randomUa.generate())
 			.goto(obj.link)
-			.wait(opt.elements.questionDate)
+			.wait((opt.elements && opt.elements.questionDate) || '.cdAuthorInfoBlock')
 			.evaluate(evalFunctions.singleQuestion, opt)
 			.end()
 			.then(data => {
