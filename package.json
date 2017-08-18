@@ -19,6 +19,7 @@
   "author": "Kennedy Rose <krose@escaladesports.com> (https://escaladesports.com)",
   "license": "MIT",
   "dependencies": {
+    "amazon-questions-crawler-eval": "escaladesports/amazon-questions-crawler-eval#v0.1.0",
     "nightmare": "^2.10.0",
     "random-ua": "^0.0.6"
   }

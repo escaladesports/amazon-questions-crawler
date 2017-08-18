@@ -13,6 +13,10 @@ ajv@^4.9.1:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
 
+amazon-questions-crawler-eval@escaladesports/amazon-questions-crawler-eval#v0.1.0:
+  version "0.1.0"
+  resolved "https://codeload.github.com/escaladesports/amazon-questions-crawler-eval/tar.gz/fcafc989557eb31167cb8274918694024af2c7a3"
+
 ansi-regex@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"

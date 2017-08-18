@@ -1,6 +1,7 @@
 'use strict'
 const Nightmare = require('nightmare')
-const random_ua = require('random-ua');
+const randomUa = require('random-ua')
+const evalFunctions = require('amazon-questions-crawler-eval')
 const defaultOptions = {
 	page: 'https://www.amazon.com/ask/questions/asin/{{asin}}/1/ref=ask_ql_psf_ql_hza?sort=SUBMIT_DATE',
 	elements: {
@@ -21,10 +22,10 @@ function crawlQuestions(asin, opt) {
 		opt = Object.assign({}, defaultOptions, opt)
 		let result
 		new Nightmare()
-			.useragent(opt.userAgent || random_ua.generate())
+			.useragent(opt.userAgent || randomUa.generate())
 			.goto(opt.page.replace('{{asin}}', asin))
 			.wait(opt.elements.questionBlock)
-			.evaluate(parseQuestions, opt)
+			.evaluate(evalFunctions.allQuestions, opt)
 			.end()
 			.then(content => {
 				result = content
@@ -54,10 +55,10 @@ function crawlQuestions(asin, opt) {
 function crawlSinglePage(obj, opt) {
 	return new Promise((resolve, reject) => {
 		new Nightmare()
-			.useragent(opt.userAgent || random_ua.generate())
+			.useragent(opt.userAgent || randomUa.generate())
 			.goto(obj.link)
 			.wait(opt.elements.questionDate)
-			.evaluate(parseDetails, opt)
+			.evaluate(evalFunctions.singleQuestion, opt)
 			.end()
 			.then(data => {
 				obj.date = data.date
@@ -68,60 +69,6 @@ function crawlSinglePage(obj, opt) {
 				reject(err)
 			})
 	})
-}
-
-// Find questions in browser
-function parseQuestions(opt) {
-	var questions = document.querySelectorAll(opt.elements.questionBlock)
-	var title = document.querySelector(opt.elements.productTitle)
-	title = title ? title.textContent.trim() : 'Not found'
-	var arr = []
-	for (var i = 0; i < questions.length; i++) {
-		var link = questions[i].querySelector(opt.elements.link)
-		if (link) {
-			var text = questions[i].querySelector(opt.elements.question)
-			var id = link.href.split('/')
-			id = id[id.length - 2]
-				// Stop crawling if ID is latest
-			if(opt.stopAtQuestionId == id){
-				break
-			}
-			arr[i] = {
-				id: id,
-				link: link.href,
-				question: text ? text.textContent.trim() : 'Not found'
-			}
-		}
-	}
-	return {
-		title: title,
-		questions: arr
-	}
-}
-// Find date in browser
-function parseDetails(opt) {
-	var dateQuery = document.querySelector(opt.elements.questionDate)
-	var authorQuery = document.querySelector(opt.elements.author).innerText
-
-	var date = undefined;
-	if (dateQuery) {
-		var str = dateQuery.textContent.split(' on ')
-		if (str && str[1]) {
-			date = new Date(str[1].trim());
-			if(date == 'Invalid Date') {
-				date = undefined;
-			}
-		}
-	}
-
-	var author = 'Not found'
-	if (authorQuery) {
-		author = authorQuery;
-	}
-	return {
-		date: date,
-		author: author
-	}
 }
 
 module.exports = crawlQuestions
