@@ -1,6 +1,6 @@
 {
   "name": "amazon-questions-crawler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Crawls product questions from Amazon.",
   "main": "app.js",
   "scripts": {
