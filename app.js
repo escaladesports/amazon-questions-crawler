@@ -14,7 +14,7 @@ function crawlQuestions(asin, opt) {
 		new Nightmare()
 			.useragent(opt.userAgent || randomUa.generate())
 			.goto(opt.page.replace('{{asin}}', asin))
-			.wait((opt.elements && opt.elements.questionBlock) || '.askTeaserQuestions > div')
+			.wait(evalFunctions.wait.questionBlock)
 			.evaluate(evalFunctions.allQuestions, opt)
 			.end()
 			.then(content => {
@@ -47,7 +47,7 @@ function crawlSinglePage(obj, opt) {
 		new Nightmare()
 			.useragent(opt.userAgent || randomUa.generate())
 			.goto(obj.link)
-			.wait((opt.elements && opt.elements.questionDate) || '.cdAuthorInfoBlock')
+			.wait(evalFunctions.wait.questionDate)
 			.evaluate(evalFunctions.singleQuestion, opt)
 			.end()
 			.then(data => {
